@@ -1,10 +1,11 @@
+// Entity superclass
 var Entity = function() {
     this.x = -250;
     this.y = 50;
     
     this.sprite = '';
     
-    this.stepX = 100;
+    this.stepX = 50;
     this.stepY = 80;
 }
 
@@ -14,29 +15,22 @@ Entity.prototype.render = function() {
 };
 
 
-// Enemies our player must avoid
+// Enemies class
 var Enemy = function(yCol, speed) {
     Entity.call(this);
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-    this.speed = speed ? speed: getRandom(100, 230);
+    
     this.speed = speed || getRandom(100, 230);
     this.y += yCol * this.stepY;
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 };
-
 Enemy.prototype = Object.create(Entity.prototype);
 Enemy.prototype.constructor = Enemy;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    // Multiply movement by the dt parameter to ensure game runs at same speed for all computers
     this.x = (this.x > 650) ? -150: this.x + (this.speed * dt);
     
     // Collision detection
@@ -53,6 +47,7 @@ Enemy.prototype.bumpedIntoPlayer = function() {
     return this.x > (player.x-50) && this.x < (player.x+50);
 }
 
+// Player class
 var Player = function() {
     Entity.call(this);
     
@@ -63,20 +58,18 @@ var Player = function() {
     this.defaultX = this.x;
     this.defaultY = this.y;
 };
-
 Player.prototype = Object.create(Entity.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
-
 };
 
 Player.prototype.handleInput = function(e) {
     switch (e) {
-        case 'up':    (this.y == 50)  ? this.reset(): this.y -= this.stepY; break;
-        case 'down':  (this.y == 370) ?          NaN: this.y += this.stepY; break;
-        case 'left':  (this.x == 0)   ?            0: this.x -= this.stepX; break;
-        case 'right': (this.x == 400) ?          400: this.x += this.stepX; break;
+        case 'up':    (this.y <= 50)  ? this.reset(): this.y -= this.stepY; break;
+        case 'down':  (this.y >= 370) ?          NaN: this.y += this.stepY; break;
+        case 'left':  (this.x <= 0)   ?            0: this.x -= this.stepX; break;
+        case 'right': (this.x >= 400) ?          400: this.x += this.stepX; break;
     }
 };
 
@@ -85,10 +78,7 @@ Player.prototype.reset = function() {
     this.y = this.defaultY;
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
+// Game objects instantiation 
 var allEnemies = [];
 allEnemies.push(new Enemy(2, 120));
 allEnemies.push(new Enemy(0, 170));
@@ -97,8 +87,7 @@ allEnemies.push(new Enemy(2, 190));
 
 var player = new Player();
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Adding key-press event listener
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
