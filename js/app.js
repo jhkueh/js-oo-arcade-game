@@ -45,6 +45,11 @@ Player.prototype.render = function() {
 
 
 Player.prototype.handleInput = function(e) {
+    switch (e) {
+        case 'up':    this.y = (this.y == 50) ? 50:   this.y - this.stepY; break;
+        case 'down':  this.y = (this.y == 370) ? 370: this.y + this.stepY; break;
+        case 'left':  this.x = (this.x == 0) ? 0:     this.x - this.stepX; break;
+        case 'right': this.x = (this.x == 400) ? 400: this.x + this.stepX; break;
     }
 };
 
