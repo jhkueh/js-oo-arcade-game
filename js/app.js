@@ -19,6 +19,8 @@ var Enemy = function(yCol, speed) {
     Entity.call(this);
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
+    this.speed = speed ? speed: getRandom(100, 230);
+    this.y += yCol * this.stepY;
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -34,6 +36,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x = (this.x > 650) ? -150: this.x + (this.speed * dt);
 };
 
 // Now write your own player class
@@ -71,7 +74,10 @@ Player.prototype.handleInput = function(e) {
 // Place the player object in a variable called player
 
 var allEnemies = [];
-allEnemies.push(new Enemy());
+allEnemies.push(new Enemy(2, 120));
+allEnemies.push(new Enemy(0, 170));
+allEnemies.push(new Enemy(1, 250));
+allEnemies.push(new Enemy(2, 190));
 
 var player = new Player();
 
