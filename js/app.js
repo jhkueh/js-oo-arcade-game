@@ -62,11 +62,16 @@ Player.prototype.update = function() {
 
 Player.prototype.handleInput = function(e) {
     switch (e) {
-        case 'up':    this.y = (this.y == 50) ? 50:   this.y - this.stepY; break;
-        case 'down':  this.y = (this.y == 370) ? 370: this.y + this.stepY; break;
-        case 'left':  this.x = (this.x == 0) ? 0:     this.x - this.stepX; break;
-        case 'right': this.x = (this.x == 400) ? 400: this.x + this.stepX; break;
+        case 'up':    (this.y == 50)  ? this.reset(): this.y -= this.stepY; break;
+        case 'down':  (this.y == 370) ?          NaN: this.y += this.stepY; break;
+        case 'left':  (this.x == 0)   ?            0: this.x -= this.stepX; break;
+        case 'right': (this.x == 400) ?          400: this.x += this.stepX; break;
     }
+};
+
+Player.prototype.reset = function() {
+    this.x = this.defaultX;
+    this.y = this.defaultY;
 };
 
 // Now instantiate your objects.
