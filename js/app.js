@@ -20,6 +20,7 @@ var Enemy = function(yCol, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.speed = speed ? speed: getRandom(100, 230);
+    this.speed = speed || getRandom(100, 230);
     this.y += yCol * this.stepY;
 
     // The image/sprite for our enemies, this uses
@@ -37,11 +38,21 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x = (this.x > 650) ? -150: this.x + (this.speed * dt);
+    
+    // Collision detection
+    if (this.sameLaneAsPlayer() && this.bumpedIntoPlayer()) {
+        player.reset();
+    }
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+Enemy.prototype.sameLaneAsPlayer = function() {
+    return this.y == player.y;
+}
+
+Enemy.prototype.bumpedIntoPlayer = function() {
+    return this.x > (player.x-50) && this.x < (player.x+50);
+}
+
 var Player = function() {
     Entity.call(this);
     
