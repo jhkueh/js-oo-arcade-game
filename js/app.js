@@ -2,9 +2,9 @@
 var Entity = function() {
     this.x = -250;
     this.y = 50;
-    
+
     this.sprite = '';
-    
+
     this.stepX = 50;
     this.stepY = 80;
 }
@@ -18,7 +18,7 @@ Entity.prototype.render = function() {
 // Enemies class
 var Enemy = function(yCol, speed) {
     Entity.call(this);
-    
+
     this.speed = speed || getRandom(100, 230);
     this.y += yCol * this.stepY;
 
@@ -32,7 +32,7 @@ Enemy.prototype.constructor = Enemy;
 Enemy.prototype.update = function(dt) {
     // Multiply movement by the dt parameter to ensure game runs at same speed for all computers
     this.x = (this.x > 650) ? -150: this.x + (this.speed * dt);
-    
+
     // Collision detection
     if (this.sameLaneAsPlayer() && this.bumpedIntoPlayer()) {
         player.reset();
@@ -50,13 +50,15 @@ Enemy.prototype.bumpedIntoPlayer = function() {
 // Player class
 var Player = function() {
     Entity.call(this);
-    
+
     this.sprite = 'images/char-boy.png';
-  
+
     this.x = 200;
     this.y = 370;
     this.defaultX = this.x;
     this.defaultY = this.y;
+
+    this.point = 0;
 };
 Player.prototype = Object.create(Entity.prototype);
 Player.prototype.constructor = Player;
@@ -64,9 +66,17 @@ Player.prototype.constructor = Player;
 Player.prototype.update = function() {
 };
 
+Player.prototype.render = function() {
+    ctx.font = '60px serif';
+    ctx.fillStyle = "rgba(235, 235, 235, 0.7)";
+    ctx.textAlign = "center";
+    ctx.fillText(this.point, 252, 110);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 Player.prototype.handleInput = function(e) {
     switch (e) {
-        case 'up':    (this.y <= 50)  ? this.reset(): this.y -= this.stepY; break;
+        case 'up':    (this.y <= 50)  ? this.score(): this.y -= this.stepY; break;
         case 'down':  (this.y >= 370) ?          NaN: this.y += this.stepY; break;
         case 'left':  (this.x <= 0)   ?            0: this.x -= this.stepX; break;
         case 'right': (this.x >= 400) ?          400: this.x += this.stepX; break;
@@ -78,7 +88,12 @@ Player.prototype.reset = function() {
     this.y = this.defaultY;
 };
 
-// Game objects instantiation 
+Player.prototype.score = function() {
+    this.point += 1;
+    this.reset();
+};
+
+// Game objects instantiation
 var allEnemies = [];
 allEnemies.push(new Enemy(2, 120));
 allEnemies.push(new Enemy(0, 170));
